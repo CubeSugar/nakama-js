@@ -16,7 +16,7 @@
 
 import { ApiNotification, ApiRpc } from "./api.gen";
 import { Session } from "./session";
-import { Notification } from "./client";
+import { Notification, ChannelMessage } from "./client";
 
 /** Stores function references for resolve/reject with a DOM Promise. */
 interface PromiseExecutor {
@@ -29,6 +29,7 @@ export interface Presence {
   session_id: string;
   username: string;
   node: string;
+  status?: string;
 }
 
 /** A response fron a channel join operation. */
@@ -53,19 +54,6 @@ export interface ChannelLeave {
   channel_leave: {
     channel_id: string;
   };
-}
-
-/** An incoming message on a realtime chat channel. */
-export interface ChannelMessage {
-  channel_id: string;
-  message_id: string;
-  code: number;
-  sender_id: string;
-  username: string;
-  content: object;
-  create_time: string;
-  update_time: string;
-  persistent: boolean;
 }
 
 /** An acknowledgement received in response to sending a message on a chat channel. */
@@ -158,13 +146,19 @@ export interface MatchmakerRemove {
   };
 }
 
+export interface MatchmakerUser {
+  presence: Presence;
+  string_properties: Map<string, string>;
+  numeric_properties: Map<string, number>;
+};
+
 /** Matchmaking result. */
 export interface MatchmakerMatched {
   ticket: string;
-  match_id: string;
-  token: string;
-  users: Presence[];
-  self: Presence;
+  match_id?: string;
+  token?: string;
+  users: MatchmakerUser[];
+  self: MatchmakerUser;
 }
 
 /** A realtime match */
